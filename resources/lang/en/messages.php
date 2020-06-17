@@ -1,9 +1,7 @@
 <?php
-
 return [
     'Links' => 'Links',
-	'Account'=>'Account',
-	'Home'=>'Home'
+	'Account'=>'Mi cuenta',
+	'Home'=>'Principal'
 ];
-
 ?>

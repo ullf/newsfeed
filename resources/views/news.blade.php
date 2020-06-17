@@ -7,25 +7,25 @@
 {!! $MyNavBar->asUl() !!}
 @isset($news)
 @isset($user)
- @foreach($news as $article)
+ 
  <div class="card">
 		<div class="card-body">
-			<h5 class="card-title">{{$article->title}}</h5>
+			<h5 class="card-title">{{$news->title}}</h5>
 			<p>Author: {{$author ?? "Unknown"}}</p>
-			<p class="card-text">{{$article->news_text}}</p>
-			<p>{{$article->l_url}}</p>
+			<p class="card-text">{{$news->news_text}}</p>
+			<p>{{$news->l_url}}</p>
 			@isset($author)
 			@if($user->username == $author)
-				<a href = "{{action('NewsController@news_edit', ['id' => $article->id]) }}">edit</a>
-				<a href = "{{action('NewsController@destroy', ['id' => $article->id]) }}">delete</a>
+				<a href = "{{action('NewsController@news_edit', ['id' => $news->id]) }}">edit</a>
+				<a href = "{{action('NewsController@destroy', ['id' => $news->id]) }}">delete</a>
 			@endif
 			@endisset
 		</div>
 </div>
- @endforeach
+
  <nav class="navbar navbar-light bg-light">
 {{ Form::open(array('route' => array('readcomment'))) }}
-					{{ Form::hidden('id',$news[0]->id) }}
+					{{ Form::hidden('id',$news->id) }}
 					{{ Form::textarea('comment_text',$value=null,['class'=>'form-control','placeholder'=>'comment...']) }}
 					{{ Form::submit('leave comment',['class'=>'btn btn-primary']) }}
 				{{ Form::close() }}
@@ -38,7 +38,7 @@
 		<div class="card-body">
 			<p class="card-text">{{$comment->comment_text}}</p>
 			@if($user->username == $comment->author)
-				<a href = "{{action('ReadCommentController@show', ['id' => $comment->id]) }}">edit</a>
+				<a href = "{{action('ReadCommentController@comment_edit', ['id' => $comment->id]) }}">edit</a>
 				<a href = "{{action('ReadCommentController@destroy', ['id' => $comment->id]) }}">delete</a>
 			@endif
 		</div>

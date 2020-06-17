@@ -7,12 +7,16 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Route;
 use App\Publisher;
 use App\Publish;
 use App\News;
 use App\User;
 use App\Link as Links;
+use App;
+use Session;
+use App\Comment;
 use Illuminate\Support\Facades\Auth;
 class PublisherController extends Controller
 {
@@ -29,17 +33,28 @@ class PublisherController extends Controller
      * @return \Illuminate\Http\Response
      */
 	 
+	public function change_locale(Request $request) {
+		$locale = $request->locale;
+		App::setLocale($locale);
+        session()->put('locale', $locale);
+        return redirect()->back();
+	}
+	 
     public function index()
     {
 		$user = Auth::User();
 		$links = Links::all();
 		$numofpubs = Publish::all()->where('publisherid','=',$user->id)->count();
+		$num = Publish::all()->where('publisherid','=',$user->id);
 		if($user->isPublisher() == 1) {
-			return view('pub',['userinfo'=>$user,'links'=>$links,'num'=>$numofpubs]);
+			$sum = DB::table('comment')->join(
+			'publish','publish.newsid','comment.newsid'
+			)->join('user','user.id','publish.publisherid')->where('user.id','=',$user->id)->sum("quality");
+			return view('pub',['userinfo'=>$user,'links'=>$links,'ranking'=>$sum,'num'=>$numofpubs,'reader'=>false]);
 		} else {
-			return view('pub',['userinfo'=>$user,'reader'=>false]);
+			return view('pub',['userinfo'=>$user,'reader'=>true]);
 		}
-		return view('pub',['reader'=>false]);
+		//return view('pub',['reader'=>true]);
     }
 
     /**
@@ -60,15 +75,16 @@ class PublisherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+	 
+	 
     public function show($id)
     {
-		$user = User::all()->where('username','=',$id)->where('isadmin','=','1');
+		$user = User::all()->where('username','=',$id)->where('is_publisher','=','1');
 		if($user->count() == 0){
 			echo "Publisher not found";
 		} else {
-			$numofpubs = Publish::all()->where('publisherid','=',$user[1]->id)->count();
-			$links = Links::all();
-			return redirect()->route('publisher',['name'=>$user[1]->username,'userinfo'=>$user,'links'=>$links,'num'=>$numofpubs]);
+			$numofpubs = Publish::all()->where('publisherid','=',$user[0]->id)->count();
+			return view('profile',['userinfo'=>$user[0],'num'=>$numofpubs]);
 		}
     }
 

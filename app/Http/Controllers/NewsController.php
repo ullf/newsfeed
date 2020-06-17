@@ -56,18 +56,15 @@ class NewsController extends Controller
     public function show($id)
     {
 		$user = Auth::user();
-		$speclink = Links::find($id);
-		$news = $speclink->links()->get();
-		/*$author = DB::table("publish")->join('user', 'user.id', '=', 'publish.publisherid')->
-		where('newsid','=',$speclink->id)->get('username')[0]->username;*/
+		$speclink = News::find($id);
 		$author = DB::table("publish")->join('user', 'user.id', '=', 'publish.publisherid')->
 		where('newsid','=',$speclink->id)->get('username');
 		$comments = DB::table("readcomment")->join('comment', 'comment.id', '=', 'readcomment.commentid')->
-			where('comment.newsid','=',$speclink->id)->get();
+			where('comment.newsid','=',$id)->get();
 		if(!$author->count() == 0) {
-			return view("news",array('news'=>$news,'comments' => $comments,'author'=>$author[0]->username,'user'=>$user));
+			return view("news",array('news'=>$speclink,'comments' => $comments,'author'=>$author[0]->username,'user'=>$user));
 		} else {
-			return view("news",array('news'=>$news,'comments' => $comments,'user'=>$user));
+			return view("news",array('news'=>$speclink,'comments' => $comments,'user'=>$user));
 		}
     }
 	

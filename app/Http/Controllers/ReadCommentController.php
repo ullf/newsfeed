@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\News;
 use App\Comment;
 use App\ReadComment;
+use Link as Links;
 class ReadCommentController extends Controller
 {
 	
@@ -35,13 +36,19 @@ class ReadCommentController extends Controller
 		$comment->comment_text = $request->comment_text;
 		$comment->newsid = $request->get('id');
 		$comment->author = $user->username;
-		$comment->quality = 0;
+		if(stripos($comment->comment_text,"good") !== false) {
+			$comment->quality = 1;
+		} else {
+			$comment->quality = 0;
+		}
 		$comment->save();
 		$readcomment = new ReadComment();
 		$readcomment->userid = $user->id;
 		$readcomment->commentid = $comment->id;
 		$comment->readcomment()->save($readcomment);
 		return redirect()->route('news',['id'=>$comment->newsid]);
+		} else {
+			echo "Only readers can leave comments";
 		}
     }
 
@@ -51,6 +58,17 @@ class ReadCommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+	 
+	public function comment_edit($id) 
+	{
+		$user = Auth::User();
+		$comment = Comment::find($id);
+		if($user->username == $comment->author) {
+			return view("comment_edit",['comment'=>$comment,'user'=>$user]);
+		}
+	}
+
+		
     public function show($id)
     {
 		$user = Auth::User();
@@ -87,8 +105,10 @@ class ReadCommentController extends Controller
     {
        $user = Auth::User();
 	   $comment = ReadComment::find($id);
+	   $newsid = Comment::find($comment->id)->newsid;
+	  // $newsid = $comment->newsid;
        DB::table("readcomment")->where("id",$comment->commentid)->delete();
 	   DB::table("comment")->where("id",$comment->commentid)->delete();
-	   return redirect()->back();
+	  return redirect()->route('news',['id'=>$newsid]);
     }
 }

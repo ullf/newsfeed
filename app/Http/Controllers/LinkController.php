@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Link;
 use App\News;
+use App\Comment;
+use App\ReadComment;
 class LinkController extends Controller
 {
     /**

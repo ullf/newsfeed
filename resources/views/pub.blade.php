@@ -3,7 +3,13 @@
 
 @section('content')
 <div class="container">
-@if(!@isset($reader))
+{{App::getLocale()}}
+	{{ Form::open(array('route' => array('change_locale'))) }}
+		{{ Form::select('locale',['en'=>'en','es'=>'es']) }}
+		{{ Form::submit('Save',['class'=>'btn btn-primary']) }}
+	{{ Form::close() }}
+	
+@if($reader == false)
 	@isset($userinfo)
 	@isset($links)
 	@isset($num)
@@ -16,6 +22,7 @@
                    Publisher information:
 				   <p>Username: {{$userinfo->username}}</p>
                    <p>Number of publications:{{$num}} </p>
+				   <p>Ranking: {{$ranking}} </p>
                 </div>
 				<?php
 					$arr = $links->toArray();
@@ -57,7 +64,7 @@
 	@endisset
 	@endisset
 	@endif
-	@if(@isset($reader))
+	@if($reader == true)
 		@isset($userinfo)
 			<p>Hello {{$userinfo->username}}</p>
 			<p>Status: reader</p>
