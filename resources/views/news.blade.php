@@ -14,12 +14,11 @@
 			<p>Author: {{$author ?? "Unknown"}}</p>
 			<p class="card-text">{{$news->news_text}}</p>
 			<p>{{$news->l_url}}</p>
-			@isset($author)
-			@if($user->username == $author)
+			@if($user->isAdmin() == 1 || $user->username == $author)
 				<a href = "{{action('NewsController@news_edit', ['id' => $news->id]) }}">edit</a>
 				<a href = "{{action('NewsController@destroy', ['id' => $news->id]) }}">delete</a>
 			@endif
-			@endisset
+			
 		</div>
 </div>
 
@@ -37,7 +36,7 @@
 	 <div class="card">
 		<div class="card-body">
 			<p class="card-text">{{$comment->comment_text}}</p>
-			@if($user->username == $comment->author)
+			@if($user->username == $comment->author || $user->is_admin == 1)
 				<a href = "{{action('ReadCommentController@comment_edit', ['id' => $comment->id]) }}">edit</a>
 				<a href = "{{action('ReadCommentController@destroy', ['id' => $comment->id]) }}">delete</a>
 			@endif

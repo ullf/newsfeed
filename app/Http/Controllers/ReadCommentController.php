@@ -106,7 +106,6 @@ class ReadCommentController extends Controller
        $user = Auth::User();
 	   $comment = ReadComment::find($id);
 	   $newsid = Comment::find($comment->id)->newsid;
-	  // $newsid = $comment->newsid;
        DB::table("readcomment")->where("id",$comment->commentid)->delete();
 	   DB::table("comment")->where("id",$comment->commentid)->delete();
 	  return redirect()->route('news',['id'=>$newsid]);

@@ -19,7 +19,7 @@ class User extends Authenticatable
      */
 	 
 	 protected $fillable = [
-		'username', 'password','is_publisher',
+		'username', 'password','is_publisher','is_admin',
 	];
     /*protected $fillable = [
         'name', 'email', 'password',
@@ -50,5 +50,9 @@ class User extends Authenticatable
 	
 	public function isPublisher() {
 		return $this->is_publisher;
+	}
+	
+	public function isAdmin() {
+		return $this->is_admin;
 	}
 }

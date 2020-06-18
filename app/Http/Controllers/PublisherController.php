@@ -44,8 +44,12 @@ class PublisherController extends Controller
     {
 		$user = Auth::User();
 		$links = Links::all();
+		$publishers = User::all()->where('is_publisher','=','1');
 		$numofpubs = Publish::all()->where('publisherid','=',$user->id)->count();
 		$num = Publish::all()->where('publisherid','=',$user->id);
+		if($user->isAdmin() == 1 && $user->isPublisher() == 0) {
+			return view('pub',['userinfo'=>$user,'publishers'=>$publishers,'links'=>$links,'reader'=>true]);
+		}
 		if($user->isPublisher() == 1) {
 			$sum = DB::table('comment')->join(
 			'publish','publish.newsid','comment.newsid'
@@ -108,6 +112,8 @@ class PublisherController extends Controller
      */
     public function destroy($id)
     {
-        //
+		$user = User::findOrFail($id);
+		$user->delete();
+		redirect()->route("pub");
     }
 }

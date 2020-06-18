@@ -3,9 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 use Session;
-
-class SetLocales
+class CleanSession
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,10 @@ class SetLocales
      */
     public function handle($request, Closure $next)
     {
-		app()->setLocale(Session::get('locale'));
-        return $next($request);
+		if (!Auth::check()) {
+			//Auth::logout();
+			$request->session()->forget("locale");
+		}
+		return $next($request);
     }
 }

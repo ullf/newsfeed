@@ -33,9 +33,12 @@ Route::get('deletecomment/{id}','ReadCommentController@destroy')->name('deleteco
 
 Route::get('pub','PublisherController@index')->name('publisher');
 Route::get('profile/{name}','PublisherController@show')->name('publishershow');
+Route::get('publisherdelete/{id}','PublisherController@destroy')->name('publisherdelete');
+
 Route::get('links','LinkController@index')->name('links');
 Route::get('links/{specid}','LinkController@show');
 Route::post('linkstore', 'LinkController@store')->name('linkstore');
+Route::post('linkupdate/{id}', 'LinkController@update')->name('linkupdate');
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');

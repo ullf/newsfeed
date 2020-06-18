@@ -39,6 +39,7 @@ class Kernel extends HttpKernel
 			\Illuminate\Routing\Middleware\SubstituteBindings::class,
 			\App\Http\Middleware\GenerateMenus::class,
 			\App\Http\Middleware\SetLocales::class,
+			\App\Http\Middleware\CleanSession::class,
         ],
 
         'api' => [

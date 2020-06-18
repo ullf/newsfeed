@@ -1,7 +1,13 @@
 <?php
 return [
     'Links' => 'Links',
-	'Account'=>'Mi cuenta',
-	'Home'=>'Principal'
+	'Account'=>'Account',
+	'Home'=>'Home',
+	'Hello'=>'Hello',
+	'Deletepub'=>'Delete publishers',
+	'Status'=>'Status',
+	'Publisherinfo'=>'Publisher information',
+	'Numofpub'=>'Number of publications',
+	'Title'=>'Title'
 ];
 ?>

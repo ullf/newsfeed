@@ -19,6 +19,7 @@ class User extends Migration
 				$table->string('username')->unique();
 				$table->string('password');
 				$table->boolean('is_publisher')->default(0);
+				$table->boolean('is_admin')->default(0);
 				$table->rememberToken();
 				$table->timestamps();
         });

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Link;
+use App\Link as Links;
 use App\News;
 use App\Comment;
 use App\ReadComment;
+use App\User;
+use Illuminate\Support\Facades\Auth;
 class LinkController extends Controller
 {
     /**
@@ -22,7 +24,8 @@ class LinkController extends Controller
 	
     public function index()
     {
-		$links = Link::all();
+		$user = Auth::User();
+		$links = Links::all();
 		return view("links",array('links' => $links));
     }
 
@@ -34,11 +37,15 @@ class LinkController extends Controller
      */
     public function store(Request $request)
     {
-        $link = new Link();
-		$link->l_url = $request->l_url;
-		$link->ranking = 0;
-		$link->save();
-		redirect()->route("links");
+        $link = new Links();
+		if (filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
+			$link->l_url = $request->l_url;
+			$link->ranking = 0;
+			$link->save();
+			redirect()->route("links");
+		} else {
+			echo "It's not a valid url.";
+		}
     }
 
     /**
@@ -49,7 +56,7 @@ class LinkController extends Controller
      */
     public function show($id)
     {
-        $speclink = Link::find($id);
+        $speclink = Links::find($id);
 		$n = News::all()->where('l_url',$speclink->l_url);
 		return view("link_show",array('speclink' => $speclink,'n'=>$n));
     }
@@ -63,7 +70,7 @@ class LinkController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+	
     }
 
     /**
@@ -74,6 +81,6 @@ class LinkController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
     }
 }

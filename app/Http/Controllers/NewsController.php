@@ -31,6 +31,11 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
+		$validatedData = $request->validate([
+        'title' => 'required|unique:news',
+		'news_text' => 'required|unique:news|min:10'
+		]);
+		
 		$user = Auth::User();
 		$article = new News();
 		$article->title = $request->title;
